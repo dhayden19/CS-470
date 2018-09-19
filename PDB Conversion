@@ -64,7 +64,7 @@ namespace ClassLibrary1
             //initialize a converter and have it read in lines from a pdb file
             PDBConverter converter = new PDBConverter();
             //File path here must be changed, will have to be parameterized in actual implementation
-            converter.readLines(@"C:\Users\admin\Downloads\6fhc.pdb");
+            converter.readLines(@"C:\Users\admin\Downloads\cyclohexane.pdb");
 
             //Process all the connections from the PDB file
             foreach (string s in converter.connections)
@@ -83,16 +83,24 @@ namespace ClassLibrary1
                 }
             }
 
+            File.AppendAllText(@"C:\Users\admin\Downloads\cyclohexane.cc1", converter.atoms.Count.ToString()+"\r\n");
             //create an atom object for every atom string
             foreach (string atom in converter.atoms)
             {
                 Atom a = new Atom(atom);
                 //print out the cc1 formatted string using the overidden toString method
-                Console.Out.WriteLine(a.toString());
+                //Console.Out.WriteLine(a.toString());
+
+                //myPath = "C:\file.txt"
+
+                //Write string to file
+                 File.AppendAllText(@"C:\Users\admin\Downloads\cyclohexane.cc1", a.toString()+"\r\n");
+
+               // Console.Out.Write(a.toString());
+             
             }
 
-            //suspend the console to view the converted strings
-            Console.ReadKey();
+        
         }
     }
 
@@ -103,9 +111,11 @@ namespace ClassLibrary1
         //instance variables for all the necessary data from the PDB
         private string id;
         private string element;
+        
         private string coordinate1;
         private string coordinate2;
         private string coordinate3;
+        private string colorCode;
         //list to hold connections, if any. List is used because there is no fixed amount.
         private List<string> connections;
 
@@ -114,6 +124,8 @@ namespace ClassLibrary1
         {
             //initialize the list of connections        
             connections = new List<string>();
+            Random rnd = new Random();
+            colorCode = rnd.Next(1, 9).ToString();
 
             //Trim extra spaces from string passed in
             s = Regex.Replace(s, @"\s+", " ");
@@ -139,11 +151,11 @@ namespace ClassLibrary1
         public string toString()
         {
             //build string with atom information
-            String s = "  " + element + "    " + id + "    " + coordinate1 + "    " + coordinate2 + "    " + coordinate3 + "     ";
+            String s = "  " + element + "    " + id + "    " + coordinate1 + "    " + coordinate2 + "    " + coordinate3 + "     " + colorCode +"    ";
             //Append connection info, if any is present
             foreach (string str in connections)
             {
-                s += str + " ";
+                s += str + "    ";
             }
             //return the string in the cc1 format
             return s;
